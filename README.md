@@ -292,7 +292,4 @@ api/
 - 数据库存储版本
 
 ## License
-
-本项目可按你的实际用途自行补充许可证。
-
-如果准备开源，建议选择 MIT License。
+MIT License。
