@@ -1,0 +1,499 @@
+{
+    "admins": [
+        {
+            "id": 1,
+            "username": "admin",
+            "password_hash": "$2y$12$yO/PvKG7Lq/GR2wZaevipumpveRhHykr78P6wiMZH4ga8TxZbPhGq",
+            "created_at": "2026-04-26 19:38:25"
+        }
+    ],
+    "api_categories": [
+        {
+            "id": 1,
+            "name": "解析类",
+            "sort_order": 1
+        },
+        {
+            "id": 2,
+            "name": "查询类",
+            "sort_order": 2
+        },
+        {
+            "id": 3,
+            "name": "工具类",
+            "sort_order": 3
+        },
+        {
+            "id": 4,
+            "name": "图片类",
+            "sort_order": 4
+        }
+    ],
+    "apis": [
+        {
+            "id": 1,
+            "category_id": 1,
+            "name": "网易云音乐SVIP解析",
+            "route": "163_music",
+            "script_file": "163_music.php",
+            "icon": "netease",
+            "description": "网易云音乐解析，演示接口会返回歌曲基础信息和播放地址。",
+            "method_set": "GET,POST",
+            "response_format": "JSON",
+            "access_level": "免费",
+            "status": "published",
+            "call_count": 2133611,
+            "success_count": 2133611,
+            "avg_latency_ms": 215,
+            "created_at": "2026-04-27 10:00:00",
+            "updated_at": "2026-04-27 10:00:00"
+        },
+        {
+            "id": 2,
+            "category_id": 2,
+            "name": "IP归属地查询",
+            "route": "ip_query",
+            "script_file": "ip_query.php",
+            "icon": "ip",
+            "description": "查询IP地理位置及归属地信息，不传IP时默认使用当前访问IP。",
+            "method_set": "GET,POST",
+            "response_format": "JSON",
+            "access_level": "免费",
+            "status": "published",
+            "call_count": 3100000,
+            "success_count": 3098800,
+            "avg_latency_ms": 38,
+            "created_at": "2026-04-25 10:00:00",
+            "updated_at": "2026-04-25 10:00:00"
+        },
+        {
+            "id": 3,
+            "category_id": 3,
+            "name": "JSON回显测试",
+            "route": "echo_json",
+            "script_file": "echo_json.php",
+            "icon": "json",
+            "description": "用于测试GET/POST参数是否正常进入API网关。",
+            "method_set": "GET,POST",
+            "response_format": "JSON",
+            "access_level": "免费",
+            "status": "published",
+            "call_count": 12000,
+            "success_count": 12000,
+            "avg_latency_ms": 9,
+            "created_at": "2026-04-26 10:00:00",
+            "updated_at": "2026-04-26 10:00:00"
+        },
+        {
+            "id": 4,
+            "category_id": 2,
+            "name": "城市天气id",
+            "route": "weather_city_id",
+            "script_file": "weather_city_id.php",
+            "icon": "weather",
+            "description": "查询演示城市对应的天气ID。",
+            "method_set": "GET,POST",
+            "response_format": "JSON",
+            "access_level": "免费",
+            "status": "published",
+            "call_count": 1400,
+            "success_count": 1398,
+            "avg_latency_ms": 42,
+            "created_at": "2026-04-26 10:00:00",
+            "updated_at": "2026-04-26 10:00:00"
+        },
+        {
+            "id": 5,
+            "category_id": 4,
+            "name": "豆包视频解析",
+            "route": "doubao_video",
+            "script_file": "doubao_video.php",
+            "icon": "doubao",
+            "description": "豆包短视频解析演示接口。",
+            "method_set": "GET,POST",
+            "response_format": "JSON",
+            "access_level": "免费",
+            "status": "published",
+            "call_count": 2100,
+            "success_count": 2098,
+            "avg_latency_ms": 63,
+            "created_at": "2026-04-26 10:00:00",
+            "updated_at": "2026-04-26 10:00:00"
+        },
+        {
+            "id": 6,
+            "category_id": 1,
+            "name": "bilibili解析",
+            "route": "bilibili",
+            "script_file": "bilibili.php",
+            "icon": "bilibili",
+            "description": "只能解析bilibili短视频，画质为1080，支持合集演示。",
+            "method_set": "GET,POST",
+            "response_format": "JSON",
+            "access_level": "免费",
+            "status": "published",
+            "call_count": 1700000,
+            "success_count": 1698123,
+            "avg_latency_ms": 89,
+            "created_at": "2026-04-27 10:00:00",
+            "updated_at": "2026-04-27 10:00:00"
+        },
+        {
+            "id": 7,
+            "category_id": 1,
+            "name": "抖音无水印解析",
+            "route": "douyin_no_watermark",
+            "script_file": "douyin_no_watermark.php",
+            "icon": "douyin",
+            "description": "抖音去水印解析，支持图文和短视频解析。",
+            "method_set": "GET,POST",
+            "response_format": "JSON",
+            "access_level": "免费",
+            "status": "published",
+            "call_count": 1600000,
+            "success_count": 1599012,
+            "avg_latency_ms": 102,
+            "created_at": "2026-04-27 10:00:00",
+            "updated_at": "2026-04-27 10:00:00"
+        },
+        {
+            "id": 8,
+            "category_id": 3,
+            "name": "时间戳转换",
+            "route": "timestamp",
+            "script_file": "timestamp.php",
+            "icon": "clock",
+            "description": "时间戳与日期字符串互转。",
+            "method_set": "GET,POST",
+            "response_format": "JSON",
+            "access_level": "免费",
+            "status": "published",
+            "call_count": 9800,
+            "success_count": 9780,
+            "avg_latency_ms": 5,
+            "created_at": "2026-04-27 10:00:00",
+            "updated_at": "2026-04-27 10:00:00"
+        }
+    ],
+    "api_params": [
+        {
+            "id": 1,
+            "api_id": 1,
+            "param_name": "id",
+            "required": 0,
+            "param_type": "string",
+            "description": "网易云音乐歌曲ID。id和url至少传一个。",
+            "example_value": "123456",
+            "sort_order": 1
+        },
+        {
+            "id": 2,
+            "api_id": 1,
+            "param_name": "url",
+            "required": 0,
+            "param_type": "string",
+            "description": "网易云音乐分享链接。id和url至少传一个。",
+            "example_value": "https://music.163.com/song?id=123456",
+            "sort_order": 2
+        },
+        {
+            "id": 3,
+            "api_id": 2,
+            "param_name": "ip",
+            "required": 0,
+            "param_type": "string",
+            "description": "要查询的IP地址，不传则默认当前访问IP。",
+            "example_value": "8.8.8.8",
+            "sort_order": 1
+        },
+        {
+            "id": 4,
+            "api_id": 3,
+            "param_name": "name",
+            "required": 0,
+            "param_type": "string",
+            "description": "任意字符串，用于回显测试。",
+            "example_value": "hello",
+            "sort_order": 1
+        },
+        {
+            "id": 5,
+            "api_id": 4,
+            "param_name": "city",
+            "required": 1,
+            "param_type": "string",
+            "description": "城市名称。",
+            "example_value": "北京",
+            "sort_order": 1
+        },
+        {
+            "id": 6,
+            "api_id": 5,
+            "param_name": "url",
+            "required": 1,
+            "param_type": "string",
+            "description": "豆包短视频链接。",
+            "example_value": "https://example.com/video/1",
+            "sort_order": 1
+        },
+        {
+            "id": 7,
+            "api_id": 6,
+            "param_name": "url",
+            "required": 1,
+            "param_type": "string",
+            "description": "bilibili视频链接。",
+            "example_value": "https://www.bilibili.com/video/BVxxxx",
+            "sort_order": 1
+        },
+        {
+            "id": 8,
+            "api_id": 7,
+            "param_name": "url",
+            "required": 1,
+            "param_type": "string",
+            "description": "抖音分享链接。",
+            "example_value": "https://v.douyin.com/xxxx/",
+            "sort_order": 1
+        },
+        {
+            "id": 9,
+            "api_id": 8,
+            "param_name": "timestamp",
+            "required": 0,
+            "param_type": "integer",
+            "description": "Unix时间戳。",
+            "example_value": "1735689600",
+            "sort_order": 1
+        },
+        {
+            "id": 10,
+            "api_id": 8,
+            "param_name": "datetime",
+            "required": 0,
+            "param_type": "string",
+            "description": "日期时间字符串。",
+            "example_value": "2025-01-01 00:00:00",
+            "sort_order": 2
+        }
+    ],
+    "api_response_params": [
+        {
+            "id": 1,
+            "api_id": 1,
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 1
+        },
+        {
+            "id": 2,
+            "api_id": 1,
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 2
+        },
+        {
+            "id": 3,
+            "api_id": 1,
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 3
+        },
+        {
+            "id": 4,
+            "api_id": 2,
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 1
+        },
+        {
+            "id": 5,
+            "api_id": 2,
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 2
+        },
+        {
+            "id": 6,
+            "api_id": 2,
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 3
+        },
+        {
+            "id": 7,
+            "api_id": 3,
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 1
+        },
+        {
+            "id": 8,
+            "api_id": 3,
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 2
+        },
+        {
+            "id": 9,
+            "api_id": 3,
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 3
+        },
+        {
+            "id": 10,
+            "api_id": 4,
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 1
+        },
+        {
+            "id": 11,
+            "api_id": 4,
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 2
+        },
+        {
+            "id": 12,
+            "api_id": 4,
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 3
+        },
+        {
+            "id": 13,
+            "api_id": 5,
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 1
+        },
+        {
+            "id": 14,
+            "api_id": 5,
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 2
+        },
+        {
+            "id": 15,
+            "api_id": 5,
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 3
+        },
+        {
+            "id": 16,
+            "api_id": 6,
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 1
+        },
+        {
+            "id": 17,
+            "api_id": 6,
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 2
+        },
+        {
+            "id": 18,
+            "api_id": 6,
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 3
+        },
+        {
+            "id": 19,
+            "api_id": 7,
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 1
+        },
+        {
+            "id": 20,
+            "api_id": 7,
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 2
+        },
+        {
+            "id": 21,
+            "api_id": 7,
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 3
+        },
+        {
+            "id": 22,
+            "api_id": 8,
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 1
+        },
+        {
+            "id": 23,
+            "api_id": 8,
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 2
+        },
+        {
+            "id": 24,
+            "api_id": 8,
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 3
+        }
+    ],
+    "api_call_logs": []
+}
