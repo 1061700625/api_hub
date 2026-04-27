@@ -16,9 +16,18 @@
 </header>
 
 <?php
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$forwardedProto = strtolower((string)($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+$cfVisitor = (string)($_SERVER['HTTP_CF_VISITOR'] ?? '');
+$scheme = 'http';
+if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || $forwardedProto === 'https'
+    || str_contains($cfVisitor, '\"scheme\":\"https\"')
+) {
+    $scheme = 'https';
+}
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$apiUrl = $scheme . '://' . $host . '/api/' . $api['route'];
+$apiPath = '/api/' . $api['route'];
+$apiUrl = $scheme . '://' . $host . $apiPath;
 $examplePairs = [];
 foreach ($params as $p) {
     $name = (string)($p['param_name'] ?? '');
@@ -233,7 +242,7 @@ $data = json_decode($response, true);</code></pre>
                             </select>
                         </label>
                         <label class="debug-field">接口地址
-                            <input id="debug-endpoint" value="<?= h($apiUrl) ?>" readonly>
+                            <input id="debug-endpoint" value="<?= h($apiUrl) ?>" data-endpoint-path="<?= h($apiPath) ?>" readonly>
                         </label>
                         <?php foreach ($params as $p): ?>
                             <?php
@@ -314,11 +323,15 @@ $data = json_decode($response, true);</code></pre>
         }
     }
 
+    if (endpointInput && endpointInput.dataset.endpointPath) {
+        endpointInput.value = window.location.origin + endpointInput.dataset.endpointPath;
+    }
+
     if (form) {
         form.addEventListener('submit', async event => {
             event.preventDefault();
             const method = (methodSelect.value || 'GET').toUpperCase();
-            const endpoint = endpointInput.value;
+            const endpoint = endpointInput.dataset.endpointPath || endpointInput.value;
             const params = new URLSearchParams();
             const body = {};
 
@@ -332,13 +345,10 @@ $data = json_decode($response, true);</code></pre>
                 body[name] = value;
             });
 
-            let requestUrl = endpoint;
+            const requestUrl = new URL(endpoint, window.location.origin);
             const options = { method: method, headers: { 'Accept': 'application/json' } };
             if (method === 'GET') {
-                const query = params.toString();
-                if (query) {
-                    requestUrl += (endpoint.includes('?') ? '&' : '?') + query;
-                }
+                params.forEach((value, key) => requestUrl.searchParams.append(key, value));
             } else {
                 options.headers['Content-Type'] = 'application/json';
                 options.body = JSON.stringify(body);
@@ -349,7 +359,7 @@ $data = json_decode($response, true);</code></pre>
             const started = performance.now();
 
             try {
-                const response = await fetch(requestUrl, options);
+                const response = await fetch(requestUrl.toString(), options);
                 const text = await response.text();
                 const elapsed = Math.round(performance.now() - started);
                 elapsedEl.textContent = '◔ ' + elapsed + 'ms';
