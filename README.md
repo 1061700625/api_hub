@@ -2,6 +2,8 @@
 
 一个轻量级 PHP API 管理平台，用于集中展示、发布和管理自定义 API。项目采用本地文件数据存储，API 脚本统一放在 `api/` 目录下，通过统一网关暴露为 `/api/xxx` 调用地址。
 
+> 在线体验：https://api.xfxuezhang.cn/
+
 <img width="3338" height="1746" alt="image" src="https://github.com/user-attachments/assets/ec0be7f7-a171-4b8e-952f-3a3dce7c5499" />
 
 <img width="3310" height="1710" alt="image" src="https://github.com/user-attachments/assets/a5448f44-e456-444f-8866-7a4db05a6648" />
