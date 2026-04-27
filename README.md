@@ -111,6 +111,17 @@ http://127.0.0.1:8080/api/ip_query?ip=8.8.8.8
 
 首次部署后建议尽快修改默认密码。
 
+> 生成密码：
+> 
+> ```bash
+> php -r "echo password_hash('新密码', PASSWORD_DEFAULT), PHP_EOL;"
+> ```
+> 
+> 复制输出结果到`database/data.json`的`"password_hash"`字段。
+> 
+> 注意不要重新执行`php database/init.php`，会生成或重置 `database/data.json`，这样可能把已有 API 配置一并重置掉
+> 
+
 ## API 脚本规范
 
 每个 API 脚本放在 `api/` 目录下，并返回一个可调用函数。
