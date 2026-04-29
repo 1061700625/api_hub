@@ -32,6 +32,20 @@ if (!in_array($method, $allowed, true)) {
 }
 
 $input = request_data();
+
+if ((int)($api['require_key'] ?? 0) === 1) {
+    $apiKey = trim((string)($input['key'] ?? ''));
+    if ($apiKey === '') {
+        log_call_file($database, $api, 401, $started);
+        json_output(['code' => 401, 'msg' => 'Missing API key', 'data' => null], 401);
+    }
+
+    if (!$database->activeApiKey($apiKey)) {
+        log_call_file($database, $api, 403, $started);
+        json_output(['code' => 403, 'msg' => 'Invalid or inactive API key', 'data' => null], 403);
+    }
+}
+
 $params = $database->paramsForApi((int)$api['id']);
 
 foreach ($params as $param) {

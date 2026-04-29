@@ -23,6 +23,17 @@ if (preg_match('#^/api-doc/([a-zA-Z0-9_-]+)$#', $uri, $matches)) {
     exit;
 }
 
+if ($uri === '/api-key') {
+    front_api_key();
+    exit;
+}
+
+if ($uri === '/api-key/apply') {
+    front_api_key_apply();
+    exit;
+}
+
+
 if ($uri === '/admin') {
     redirect('/admin/apis');
 }
@@ -40,6 +51,18 @@ if ($uri === '/admin/logout') {
 if ($uri === '/admin/apis') {
     require_admin();
     admin_apis();
+    exit;
+}
+
+if ($uri === '/admin/api-keys') {
+    require_admin();
+    admin_api_keys();
+    exit;
+}
+
+if ($uri === '/admin/api-keys/status') {
+    require_admin();
+    admin_api_key_status();
     exit;
 }
 
@@ -106,6 +129,66 @@ function front_doc(string $route): void
     include __DIR__ . '/../views/front/doc.php';
 }
 
+function front_api_key(): void
+{
+    start_session();
+    $database = db();
+    $createdKey = $_SESSION['created_api_key'] ?? null;
+    if (is_array($createdKey) && !empty($createdKey['uuid'])) {
+        $latestKey = $database->getApiKeyByUuid((string)$createdKey['uuid']);
+        if ($latestKey) {
+            $createdKey = $latestKey;
+            $_SESSION['created_api_key'] = $latestKey;
+        }
+    }
+
+    $apiKeyError = $_SESSION['api_key_apply_error'] ?? '';
+    $apiKeyOld = $_SESSION['api_key_apply_old'] ?? ['email' => '', 'purpose' => ''];
+    unset($_SESSION['api_key_apply_error']);
+    $title = '申请 ApiKey';
+    include __DIR__ . '/../views/front/api_key.php';
+}
+
+function front_api_key_apply(): void
+{
+    start_session();
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        redirect('/api-key');
+    }
+
+    verify_csrf();
+
+    $email = trim((string)($_POST['email'] ?? ''));
+    $purpose = trim((string)($_POST['purpose'] ?? ''));
+    $_SESSION['api_key_apply_old'] = [
+        'email' => $email,
+        'purpose' => $purpose,
+    ];
+
+    if ($email === '') {
+        $_SESSION['api_key_apply_error'] = '邮箱为必填项，请填写后再提交。';
+        redirect('/api-key');
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['api_key_apply_error'] = '邮箱格式不正确，请检查后再提交。';
+        redirect('/api-key');
+    }
+
+    $createdKey = db()->createApiKey(
+        $email,
+        $purpose,
+        $_SERVER['REMOTE_ADDR'] ?? '',
+        $_SERVER['HTTP_USER_AGENT'] ?? ''
+    );
+
+    $_SESSION['created_api_key'] = $createdKey;
+    $_SESSION['api_key_apply_old'] = ['email' => '', 'purpose' => ''];
+    redirect('/api-key?created=1');
+}
+
+
 function admin_login(): void
 {
     start_session();
@@ -129,10 +212,43 @@ function admin_login(): void
 
 function admin_apis(): void
 {
-    $apis = db()->allApis();
+    $database = db();
+    $apis = $database->allApis();
+    $pendingKeyCount = $database->pendingApiKeyCount();
     $admin = current_admin();
     $title = '后台管理';
     include __DIR__ . '/../views/admin/apis.php';
+}
+
+function admin_api_keys(): void
+{
+    $database = db();
+    start_session();
+    $keys = $database->allApiKeys();
+    $pendingKeyCount = $database->pendingApiKeyCount();
+    $admin = current_admin();
+    $title = 'ApiKey 审核';
+    include __DIR__ . '/../views/admin/api_keys.php';
+}
+
+function admin_api_key_status(): void
+{
+    start_session();
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        redirect('/admin/api-keys');
+    }
+
+    verify_csrf();
+
+    $id = (int)($_POST['id'] ?? 0);
+    $status = trim((string)($_POST['status'] ?? ''));
+
+    if ($id > 0) {
+        db()->setApiKeyStatus($id, $status);
+    }
+
+    redirect('/admin/api-keys');
 }
 
 function admin_api_form(int $id = 0): void
@@ -152,6 +268,7 @@ function admin_api_form(int $id = 0): void
         'response_format' => 'JSON',
         'access_level' => '免费',
         'status' => 'draft',
+        'require_key' => 0,
     ];
     $params = [];
     $responseParams = [];
@@ -194,6 +311,7 @@ function admin_api_form(int $id = 0): void
         $api['response_format'] = 'JSON';
         $api['access_level'] = trim($_POST['access_level'] ?? '免费');
         $api['status'] = trim($_POST['status'] ?? 'draft');
+        $api['require_key'] = !empty($_POST['require_key']) ? 1 : 0;
 
         $postedParams = $_POST['params'] ?? [];
         $params = [];

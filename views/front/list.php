@@ -18,6 +18,7 @@ $totalTodayCalls = array_sum(array_map(static fn($item) => (int)($item['today_ca
         <strong>小锋学长的API Hub</strong>
     </a>
     <nav>
+        <a href="/api-key" class="nav-link">申请ApiKey</a>
         <a href="/admin/apis" class="nav-link">后台管理</a>
     </nav>
 </header>

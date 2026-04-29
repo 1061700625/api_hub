@@ -3,8 +3,8 @@
         {
             "id": 1,
             "username": "admin",
-            "password_hash": "$2y$12$yO/PvKG7Lq/GR2wZaevipumpveRhHykr78P6wiMZH4ga8TxZbPhGq",
-            "created_at": "2026-04-26 19:38:25"
+            "password_hash": "$2y$12$wtCkw/mZB33nfmA1/DqvvuGOuDwFSpVQX0Gxw9Ga5z1domgAuFjZS",
+            "created_at": "2026-04-29 09:58:01"
         }
     ],
     "api_categories": [
@@ -46,7 +46,8 @@
             "success_count": 2133611,
             "avg_latency_ms": 215,
             "created_at": "2026-04-27 10:00:00",
-            "updated_at": "2026-04-27 10:00:00"
+            "updated_at": "2026-04-27 10:00:00",
+            "require_key": 0
         },
         {
             "id": 2,
@@ -64,7 +65,8 @@
             "success_count": 3098800,
             "avg_latency_ms": 38,
             "created_at": "2026-04-25 10:00:00",
-            "updated_at": "2026-04-25 10:00:00"
+            "updated_at": "2026-04-25 10:00:00",
+            "require_key": 0
         },
         {
             "id": 3,
@@ -78,11 +80,14 @@
             "response_format": "JSON",
             "access_level": "免费",
             "status": "published",
-            "call_count": 12000,
-            "success_count": 12000,
-            "avg_latency_ms": 9,
+            "call_count": 12002,
+            "success_count": 12001,
+            "avg_latency_ms": 3,
             "created_at": "2026-04-26 10:00:00",
-            "updated_at": "2026-04-26 10:00:00"
+            "updated_at": "2026-04-29 11:20:53",
+            "require_key": 1,
+            "category_name": "工具类",
+            "today_call_count": 0
         },
         {
             "id": 4,
@@ -100,7 +105,8 @@
             "success_count": 1398,
             "avg_latency_ms": 42,
             "created_at": "2026-04-26 10:00:00",
-            "updated_at": "2026-04-26 10:00:00"
+            "updated_at": "2026-04-26 10:00:00",
+            "require_key": 0
         },
         {
             "id": 5,
@@ -118,7 +124,8 @@
             "success_count": 2098,
             "avg_latency_ms": 63,
             "created_at": "2026-04-26 10:00:00",
-            "updated_at": "2026-04-26 10:00:00"
+            "updated_at": "2026-04-26 10:00:00",
+            "require_key": 0
         },
         {
             "id": 6,
@@ -136,7 +143,8 @@
             "success_count": 1698123,
             "avg_latency_ms": 89,
             "created_at": "2026-04-27 10:00:00",
-            "updated_at": "2026-04-27 10:00:00"
+            "updated_at": "2026-04-27 10:00:00",
+            "require_key": 0
         },
         {
             "id": 7,
@@ -154,7 +162,8 @@
             "success_count": 1599012,
             "avg_latency_ms": 102,
             "created_at": "2026-04-27 10:00:00",
-            "updated_at": "2026-04-27 10:00:00"
+            "updated_at": "2026-04-27 10:00:00",
+            "require_key": 0
         },
         {
             "id": 8,
@@ -172,7 +181,8 @@
             "success_count": 9780,
             "avg_latency_ms": 5,
             "created_at": "2026-04-27 10:00:00",
-            "updated_at": "2026-04-27 10:00:00"
+            "updated_at": "2026-04-27 10:00:00",
+            "require_key": 0
         }
     ],
     "api_params": [
@@ -204,16 +214,6 @@
             "param_type": "string",
             "description": "要查询的IP地址，不传则默认当前访问IP。",
             "example_value": "8.8.8.8",
-            "sort_order": 1
-        },
-        {
-            "id": 4,
-            "api_id": 3,
-            "param_name": "name",
-            "required": 0,
-            "param_type": "string",
-            "description": "任意字符串，用于回显测试。",
-            "example_value": "hello",
             "sort_order": 1
         },
         {
@@ -275,6 +275,16 @@
             "description": "日期时间字符串。",
             "example_value": "2025-01-01 00:00:00",
             "sort_order": 2
+        },
+        {
+            "param_name": "name",
+            "required": 0,
+            "param_type": "string",
+            "description": "任意字符串，用于回显测试。",
+            "example_value": "hello",
+            "sort_order": 0,
+            "id": 11,
+            "api_id": 3
         }
     ],
     "api_response_params": [
@@ -326,33 +336,6 @@
         {
             "id": 6,
             "api_id": 2,
-            "param_name": "data",
-            "param_type": "object",
-            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
-            "example_value": "{}",
-            "sort_order": 3
-        },
-        {
-            "id": 7,
-            "api_id": 3,
-            "param_name": "code",
-            "param_type": "integer",
-            "description": "业务状态码，0 表示请求成功。",
-            "example_value": "0",
-            "sort_order": 1
-        },
-        {
-            "id": 8,
-            "api_id": 3,
-            "param_name": "msg",
-            "param_type": "string",
-            "description": "接口调用结果说明。",
-            "example_value": "success",
-            "sort_order": 2
-        },
-        {
-            "id": 9,
-            "api_id": 3,
             "param_name": "data",
             "param_type": "object",
             "description": "接口返回的业务数据。具体字段以对应 API 为准。",
@@ -493,7 +476,69 @@
             "description": "接口返回的业务数据。具体字段以对应 API 为准。",
             "example_value": "{}",
             "sort_order": 3
+        },
+        {
+            "param_name": "code",
+            "param_type": "integer",
+            "description": "业务状态码，0 表示请求成功。",
+            "example_value": "0",
+            "sort_order": 0,
+            "id": 25,
+            "api_id": 3
+        },
+        {
+            "param_name": "msg",
+            "param_type": "string",
+            "description": "接口调用结果说明。",
+            "example_value": "success",
+            "sort_order": 1,
+            "id": 26,
+            "api_id": 3
+        },
+        {
+            "param_name": "data",
+            "param_type": "object",
+            "description": "接口返回的业务数据。具体字段以对应 API 为准。",
+            "example_value": "{}",
+            "sort_order": 2,
+            "id": 27,
+            "api_id": 3
         }
     ],
-    "api_call_logs": []
+    "api_keys": [
+        {
+            "id": 1,
+            "uuid": "c2f2ba23-8515-4052-9beb-a3604340527d",
+            "email": "1061700625@qq.com",
+            "purpose": "123",
+            "status": "active",
+            "ip": "127.0.0.1",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0",
+            "created_at": "2026-04-29 11:19:47",
+            "updated_at": "2026-04-29 11:19:53",
+            "approved_at": "2026-04-29 11:19:53"
+        }
+    ],
+    "api_call_logs": [
+        {
+            "id": 1,
+            "api_id": 3,
+            "route": "echo_json",
+            "ip": "127.0.0.1",
+            "method": "GET",
+            "status_code": 401,
+            "latency_ms": 0,
+            "created_at": "2026-04-29 11:21:00"
+        },
+        {
+            "id": 2,
+            "api_id": 3,
+            "route": "echo_json",
+            "ip": "127.0.0.1",
+            "method": "GET",
+            "status_code": 200,
+            "latency_ms": 1,
+            "created_at": "2026-04-29 11:21:02"
+        }
+    ]
 }

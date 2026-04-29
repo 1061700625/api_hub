@@ -9,7 +9,7 @@
 <body>
 <header class="topbar admin-topbar">
     <a class="brand" href="/admin/apis"><span class="brand-logo">API</span><strong>后台管理</strong></a>
-    <nav><a class="nav-link" href="/admin/apis">API列表</a><a class="nav-link" href="/">前台</a></nav>
+    <nav><a class="nav-link" href="/admin/apis">API列表</a><a class="nav-link" href="/admin/api-keys">Key审核</a><a class="nav-link" href="/">前台</a></nav>
 </header>
 <main class="admin-page form-page">
     <div class="admin-head form-head">
@@ -95,6 +95,13 @@
                         <option value="published" <?= $api['status'] === 'published' ? 'selected' : '' ?>>已发布</option>
                         <option value="disabled" <?= $api['status'] === 'disabled' ? 'selected' : '' ?>>已禁用</option>
                     </select>
+                </label>
+                <label class="check-toggle require-key-toggle span-3">
+                    <input type="checkbox" name="require_key" value="1" <?= !empty($api['require_key']) ? 'checked' : '' ?>>
+                    <span>
+                        <strong>调用该 API 时必须传入有效的 <code>key</code> 参数</strong>
+                        <small>开启后，调用方需要在请求参数中提供已审核通过的 UUID Key。</small>
+                    </span>
                 </label>
                 <div class="method-box span-3">
                     <span>请求方式</span>

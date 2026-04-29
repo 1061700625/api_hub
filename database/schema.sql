@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS apis (
   method_set TEXT NOT NULL DEFAULT 'GET,POST',
   response_format TEXT NOT NULL DEFAULT 'JSON',
   access_level TEXT NOT NULL DEFAULT '免费',
+  require_key INTEGER NOT NULL DEFAULT 0,
   status TEXT NOT NULL DEFAULT 'draft',
   call_count INTEGER DEFAULT 0,
   success_count INTEGER DEFAULT 0,
@@ -41,6 +42,19 @@ CREATE TABLE IF NOT EXISTS api_params (
   example_value TEXT NULL,
   sort_order INTEGER DEFAULT 0,
   FOREIGN KEY (api_id) REFERENCES apis(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS api_keys (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  uuid TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL DEFAULT '',
+  purpose TEXT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  ip TEXT NULL,
+  user_agent TEXT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  approved_at TEXT NULL
 );
 
 CREATE TABLE IF NOT EXISTS api_call_logs (

@@ -12,7 +12,7 @@
         <span class="brand-logo">API</span>
         <strong>小锋学长的API Hub</strong>
     </a>
-    <nav><a href="/" class="nav-link">接口列表</a><a href="/admin/apis" class="nav-link">后台管理</a></nav>
+    <nav><a href="/" class="nav-link">接口列表</a><a href="/api-key" class="nav-link">申请ApiKey</a><a href="/admin/apis" class="nav-link">后台管理</a></nav>
 </header>
 
 <?php
@@ -43,6 +43,9 @@ foreach ($params as $p) {
         };
     }
     $examplePairs[$name] = $value;
+}
+if (!empty($api['require_key'])) {
+    $examplePairs = ['key' => 'YOUR_API_KEY'] + $examplePairs;
 }
 $queryString = $examplePairs ? '?' . http_build_query($examplePairs) : '';
 $exampleUrl = $apiUrl . $queryString;
@@ -77,6 +80,7 @@ if (!$allowedMethods) {
                     <div class="doc-label-row">
                         <span><?= h($api['category_name'] ?: '未分类') ?></span>
                         <span><?= h(badge_access($api['access_level'])) ?></span>
+                        <span><?= !empty($api['require_key']) ? '需要Key' : '免Key' ?></span>
                         <span>JSON</span>
                     </div>
                     <h1><?= h($api['name']) ?></h1>
@@ -118,6 +122,7 @@ if (!$allowedMethods) {
                     <div class="overview-item"><span>请求方式</span><strong><?= h($api['method_set']) ?></strong></div>
                     <div class="overview-item"><span>返回格式</span><strong><?= h($api['response_format']) ?></strong></div>
                     <div class="overview-item"><span>调用权限</span><strong><?= h(badge_access($api['access_level'])) ?></strong></div>
+                    <div class="overview-item"><span>ApiKey</span><strong><?= !empty($api['require_key']) ? '需要' : '不需要' ?></strong></div>
                     <div class="overview-item"><span>创建时间</span><strong><?= h(substr((string)$api['created_at'], 0, 10)) ?></strong></div>
                     <div class="overview-item"><span>脚本路由</span><code><?= h($api['route']) ?></code></div>
                 </div>
@@ -143,6 +148,15 @@ if (!$allowedMethods) {
                         </tr>
                         </thead>
                         <tbody>
+                        <?php if (!empty($api['require_key'])): ?>
+                            <tr>
+                                <td><code>key</code></td>
+                                <td><span class="badge orange">是</span></td>
+                                <td>string</td>
+                                <td>审核通过后的 ApiKey。</td>
+                                <td><code>YOUR_API_KEY</code></td>
+                            </tr>
+                        <?php endif; ?>
                         <?php foreach ($params as $p): ?>
                             <tr>
                                 <td><code><?= h($p['param_name']) ?></code></td>
@@ -152,7 +166,7 @@ if (!$allowedMethods) {
                                 <td><code><?= h($p['example_value']) ?></code></td>
                             </tr>
                         <?php endforeach; ?>
-                        <?php if (!$params): ?>
+                        <?php if (!$params && empty($api['require_key'])): ?>
                             <tr><td colspan="5">无请求参数。</td></tr>
                         <?php endif; ?>
                         </tbody>
@@ -244,6 +258,11 @@ $data = json_decode($response, true);</code></pre>
                         <label class="debug-field">接口地址
                             <input id="debug-endpoint" value="<?= h($apiUrl) ?>" data-endpoint-path="<?= h($apiPath) ?>" readonly>
                         </label>
+                        <?php if (!empty($api['require_key'])): ?>
+                            <label class="debug-field">key <em>*</em>
+                                <input class="debug-param-input" data-param-name="key" value="" placeholder="请输入审核通过后的 ApiKey">
+                            </label>
+                        <?php endif; ?>
                         <?php foreach ($params as $p): ?>
                             <?php
                             $debugName = (string)($p['param_name'] ?? '');
@@ -256,7 +275,7 @@ $data = json_decode($response, true);</code></pre>
                                 <input class="debug-param-input" data-param-name="<?= h($debugName) ?>" value="<?= h($debugExample) ?>" placeholder="<?= h($p['description'] ?: '请输入参数值') ?>">
                             </label>
                         <?php endforeach; ?>
-                        <?php if (!$params): ?>
+                        <?php if (!$params && empty($api['require_key'])): ?>
                             <div class="debug-empty">该接口未配置请求参数，可直接发送请求。</div>
                         <?php endif; ?>
                         <button class="primary-btn debug-submit" type="submit">➤ 发送请求</button>

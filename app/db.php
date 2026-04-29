@@ -13,6 +13,7 @@ class FileDatabase
             mkdir($dir, 0775, true);
         }
         $this->load();
+        $this->ensureDataShape();
         $this->ensureDefaultAdmin();
     }
 
@@ -42,6 +43,7 @@ class FileDatabase
     public function reset(): void
     {
         $this->data = $this->seedData();
+        $this->ensureDataShape();
         $this->ensureDefaultAdmin();
         $this->save();
     }
@@ -104,8 +106,58 @@ class FileDatabase
                 ['id'=>23,'api_id'=>8,'param_name'=>'msg','param_type'=>'string','description'=>'接口调用结果说明。','example_value'=>'success','sort_order'=>2],
                 ['id'=>24,'api_id'=>8,'param_name'=>'data','param_type'=>'object','description'=>'接口返回的业务数据。具体字段以对应 API 为准。','example_value'=>'{}','sort_order'=>3],
             ],
+            'api_keys' => [],
             'api_call_logs' => [],
         ];
+    }
+
+    private function ensureDataShape(): void
+    {
+        $changed = false;
+
+        foreach ([
+            'admins',
+            'api_categories',
+            'apis',
+            'api_params',
+            'api_response_params',
+            'api_keys',
+            'api_call_logs',
+        ] as $table) {
+            if (!isset($this->data[$table]) || !is_array($this->data[$table])) {
+                $this->data[$table] = [];
+                $changed = true;
+            }
+        }
+
+        foreach ($this->data['apis'] as $idx => $api) {
+            if (!array_key_exists('require_key', $api)) {
+                $this->data['apis'][$idx]['require_key'] = 0;
+                $changed = true;
+            }
+        }
+
+        foreach ($this->data['api_keys'] as $idx => $key) {
+            foreach ([
+                'status' => 'pending',
+                'created_at' => $this->now(),
+                'updated_at' => $this->now(),
+                'approved_at' => null,
+                'email' => '',
+                'purpose' => '',
+                'ip' => '',
+                'user_agent' => '',
+            ] as $field => $default) {
+                if (!array_key_exists($field, $key)) {
+                    $this->data['api_keys'][$idx][$field] = $default;
+                    $changed = true;
+                }
+            }
+        }
+
+        if ($changed) {
+            $this->save();
+        }
     }
 
     private function nextId(string $table): int
@@ -120,6 +172,14 @@ class FileDatabase
     private function now(): string
     {
         return date('Y-m-d H:i:s');
+    }
+
+    private function uuidV4(): string
+    {
+        $data = random_bytes(16);
+        $data[6] = chr((ord($data[6]) & 0x0f) | 0x40);
+        $data[8] = chr((ord($data[8]) & 0x3f) | 0x80);
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
     public function ensureDefaultAdmin(): void
@@ -402,6 +462,94 @@ class FileDatabase
         $this->data['api_params'] = array_values(array_filter($this->data['api_params'], fn($row) => (int)$row['api_id'] !== $id));
         $this->data['api_response_params'] = array_values(array_filter($this->data['api_response_params'] ?? [], fn($row) => (int)$row['api_id'] !== $id));
         $this->save();
+    }
+
+
+    public function allApiKeys(): array
+    {
+        $rows = $this->data['api_keys'] ?? [];
+        usort($rows, fn($a, $b) => (int)($b['id'] ?? 0) <=> (int)($a['id'] ?? 0));
+        return $rows;
+    }
+
+    public function pendingApiKeyCount(): int
+    {
+        $count = 0;
+        foreach ($this->data['api_keys'] ?? [] as $row) {
+            if (($row['status'] ?? '') === 'pending') {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public function createApiKey(string $email, string $purpose = '', string $ip = '', string $userAgent = ''): array
+    {
+        $now = $this->now();
+        do {
+            $uuid = $this->uuidV4();
+        } while ($this->getApiKeyByUuid($uuid) !== null);
+
+        $row = [
+            'id' => $this->nextId('api_keys'),
+            'uuid' => $uuid,
+            'email' => $email,
+            'purpose' => $purpose,
+            'status' => 'pending',
+            'ip' => $ip,
+            'user_agent' => $userAgent,
+            'created_at' => $now,
+            'updated_at' => $now,
+            'approved_at' => null,
+        ];
+
+        $this->data['api_keys'][] = $row;
+        $this->save();
+        return $row;
+    }
+
+    public function getApiKeyByUuid(string $uuid): ?array
+    {
+        $uuid = trim($uuid);
+        if ($uuid === '') {
+            return null;
+        }
+
+        foreach ($this->data['api_keys'] ?? [] as $row) {
+            if (hash_equals((string)($row['uuid'] ?? ''), $uuid)) {
+                return $row;
+            }
+        }
+        return null;
+    }
+
+    public function activeApiKey(string $uuid): ?array
+    {
+        $row = $this->getApiKeyByUuid($uuid);
+        if (!$row || ($row['status'] ?? '') !== 'active') {
+            return null;
+        }
+        return $row;
+    }
+
+    public function setApiKeyStatus(int $id, string $status): void
+    {
+        if (!in_array($status, ['pending', 'active', 'disabled'], true)) {
+            throw new RuntimeException('Invalid API Key status');
+        }
+
+        foreach ($this->data['api_keys'] ?? [] as $idx => $row) {
+            if ((int)($row['id'] ?? 0) === $id) {
+                $now = $this->now();
+                $this->data['api_keys'][$idx]['status'] = $status;
+                $this->data['api_keys'][$idx]['updated_at'] = $now;
+                if ($status === 'active' && empty($this->data['api_keys'][$idx]['approved_at'])) {
+                    $this->data['api_keys'][$idx]['approved_at'] = $now;
+                }
+                $this->save();
+                return;
+            }
+        }
     }
 
     public function logCall(array $api, int $statusCode, int $latencyMs, bool $success = false): void

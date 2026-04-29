@@ -10,6 +10,7 @@
 <header class="topbar admin-topbar">
     <a class="brand" href="/admin/apis"><span class="brand-logo">API</span><strong>后台管理</strong></a>
     <nav>
+        <a class="nav-link" href="/admin/api-keys">Key审核<?php if (!empty($pendingKeyCount)): ?> (<?= h((string)$pendingKeyCount) ?>)<?php endif; ?></a>
         <a class="nav-link" href="/">前台</a>
         <a class="nav-link" href="/admin/logout">退出</a>
     </nav>
@@ -40,6 +41,7 @@
                     <col class="admin-col-script">
                     <col class="admin-col-category">
                     <col class="admin-col-status">
+                    <col class="admin-col-status">
                     <col class="admin-col-calls">
                     <col class="admin-col-actions">
                 </colgroup>
@@ -51,6 +53,7 @@
                     <th class="col-script">脚本</th>
                     <th class="col-category">分类</th>
                     <th class="col-status">状态</th>
+                    <th class="col-status">Key</th>
                     <th class="col-calls">调用</th>
                     <th class="col-actions">操作</th>
                 </tr>
@@ -76,6 +79,7 @@
                         <td><code class="script-code" title="<?= h($api['script_file']) ?>"><?= h($api['script_file']) ?></code></td>
                         <td><?= h($api['category_name'] ?? '-') ?></td>
                         <td><span class="status-pill <?= h($statusClass) ?>"><?= h($statusText) ?></span></td>
+                        <td><?= !empty($api['require_key']) ? '<span class="badge orange">需要</span>' : '<span class="badge muted">不需要</span>' ?></td>
                         <td class="col-calls"><span class="call-pill" title="<?= h(number_format((int)$api['call_count'])) ?>"><?= h(format_count((int)$api['call_count'])) ?></span></td>
                         <td class="actions">
                             <a class="primary-action" href="/admin/apis/edit?id=<?= h((string)$api['id']) ?>">编辑</a>
